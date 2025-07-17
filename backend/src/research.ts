@@ -99,6 +99,28 @@ const generateLearnings = async (query: string, searchResult: SearchResult) => {
   return object;
 };
 
+// blueprint to store learnings + follow-up questions
+type Learning = {
+  learning: string;
+  followUpQuestions: string[];
+};
+
+type Research = {
+  query: string | undefined;
+  queries: string[];
+  searchResults: SearchResult[];
+  learnings: Learning[];
+  completedQueries: string[];
+};
+
+const accumulatedResearch: Research = {
+  query: undefined,
+  queries: [],
+  searchResults: [],
+  learnings: [],
+  completedQueries: [],
+};
+
 // deep-research
 // recursion + depth and breadth
 const deepResearch = async (
