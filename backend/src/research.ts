@@ -177,26 +177,51 @@ const deepResearch = async (
   return accumulatedResearch;
 };
 
-// generate report with data
-const generateReport = async (research: Research) => {
-  const { text } = await generateText({
-    model: mainModel,
-    prompt:
-      "Generate a report based on the following research data: \n\n " +
-      JSON.stringify(research, null, 2),
-  });
-  return text;
+const generatepredictionTree = async (research: Research) => {
+  const confidence = Math.min(
+    95,
+    50 + research.searchResults.length * 10 + research.learnings.length * 5
+  );
+
+  return {
+    root: research.query,
+    percentage: `${confidence}%`,
+    sourceCount: research.searchResults.length,
+    theories: research.learnings.length,
+    predictions: research.learnings.map((learning, index) => ({
+      theory: learning.learning,
+      followupQuestions: learning.followUpQuestions.slice(0, 2),
+      prediction: index === 0 ? "high" : index === 1 ? "medium" : "low",
+    })),
+
+    sources: research.searchResults.map((r) => ({
+      title: r.title,
+      url: r.url,
+    })),
+
+    topPrediction:
+      research.learnings[0]?.learning || "No clear prediction found.",
+    analysisDate: new Date().toISOString(),
+  };
 };
 
 const main = async () => {
   try {
-    const prompt = "How to cook the best Gulasch?";
+    const prompt =
+      "Predict the ending of Stranger Things final season based on fan theories and cast hints.";
     const research = await deepResearch(prompt);
     console.log("Research completed! ");
-    console.log("Generating report for you...");
-    const report = await generateReport(research);
-    console.log("Report done! Click to read: report.md");
-    fs.writeFileSync("report.md", report);
+    console.log("Generating prediction tree...");
+    const predictionTree = await generatepredictionTree(research);
+    console.log("☄️ STRANGER THINGS FINALE PREDICTIONS:");
+    console.log(JSON.stringify(predictionTree, null, 2));
+
+    // save as JSON
+    fs.writeFileSync(
+      `predictions-${new Date().toISOString()}.json`,
+      JSON.stringify(predictionTree, null, 2)
+    );
+    console.log("Predictions saved to stranger-things-predictions.json");
   } catch (error) {
     console.error("Error in main:", error);
   }
