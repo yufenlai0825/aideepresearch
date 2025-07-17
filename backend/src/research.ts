@@ -122,21 +122,45 @@ const accumulatedResearch: Research = {
 };
 
 // deep-research
-// recursion + depth and breadth
+// recursion + decrement depth and breadth
 const deepResearch = async (
-  query: string,
-  depth: number = 1,
-  breadth: number = 3
+  prompt: string,
+  depth: number = 2,
+  breadth: number = 2
 ) => {
-  const queries = await generateSearchQueries(query);
+  // first search
+  if (!accumulatedResearch.query) {
+    accumulatedResearch.query = prompt;
+  }
+
+  if (depth === 0) {
+    return accumulatedResearch;
+  }
+
+  const queries = await generateSearchQueries(prompt, breadth);
+  accumulatedResearch.queries = queries;
+
   for (const query of queries) {
     console.log(`Search the web for: ${query}`);
     const searchResults = await searchAndProcess(query);
+    accumulatedResearch.searchResults.push(...searchResults);
+
     for (const searchResult of searchResults) {
       console.log(`Processing search result: ${searchResult.url}`);
       const learnings = await generateLearnings(query, searchResult);
+      accumulatedResearch.learnings.push(learnings);
+      accumulatedResearch.completedQueries.push(query);
+
+      // decrement
+      const newQuery = `Overall research goal: ${prompt}
+      Previous search queries: ${accumulatedResearch.completedQueries.join(
+        ", "
+      )}
+      Follow-up questions: ${learnings.followUpQuestions.join(", ")}`;
+      await deepResearch(newQuery, depth - 1, Math.ceil(breadth / 2));
     }
   }
+  return accumulatedResearch;
 };
 
 const main = async () => {
