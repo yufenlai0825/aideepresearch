@@ -2,6 +2,7 @@ import { groq } from "@ai-sdk/groq";
 import { generateObject, generateText, tool } from "ai";
 import { z } from "zod";
 import Exa from "exa-js";
+import fs from "fs";
 import env from "dotenv";
 env.config();
 
@@ -189,8 +190,13 @@ const generateReport = async (research: Research) => {
 
 const main = async () => {
   try {
-    const prompt = "How to become an Olympic runner?";
+    const prompt = "How to cook the best Gulasch?";
     const research = await deepResearch(prompt);
+    console.log("Research completed! ");
+    console.log("Generating report for you...");
+    const report = await generateReport(research);
+    console.log("Report done! Click to read: report.md");
+    fs.writeFileSync("report.md", report);
   } catch (error) {
     console.error("Error in main:", error);
   }
