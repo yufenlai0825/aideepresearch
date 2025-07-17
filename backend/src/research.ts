@@ -5,11 +5,11 @@ import Exa from "exa-js";
 import env from "dotenv";
 env.config();
 
-// generate queries
 const mainModel = groq("llama-3.3-70b-versatile");
 const exa = new Exa(process.env.EXA_API_KEY);
 type SearchResult = { title: string; url: string; content: string };
 
+// generate queries
 const generateSearchQueries = async (query: string, n: number = 3) => {
   const {
     object: { queries },
@@ -38,6 +38,45 @@ const searchWeb = async (query: string) => {
         content: r.text,
       } as SearchResult)
   );
+};
+
+// evaluate and keep the relevant info
+const searchAndProcess = async (query: string) => {
+  const finalSearchResults: SearchResult[] = [];
+
+  try {
+    const searchResults = await searchWeb(query);
+    for (const result of searchResults) {
+      try {
+        const { object: evaluation } = await generateObject({
+          model: mainModel,
+          prompt: `You are a researcher. Evaluate whether this result is relevant and help to answer the query: ${query}. 
+                
+                Search Result:
+                Title: ${result.title}
+                URL: ${result.url}
+                Content Preview: ${result.content.substring(0, 300)}...
+                
+                Only mark as relevant if it directly helps answer the question. Be strict.`,
+          // only evaluate the first 300 characters
+          output: "enum", // only return one of the two
+          enum: ["relevant", "irrelevant"],
+        });
+
+        console.log("Evaluation for:", result.title + ":", evaluation);
+        if (evaluation === "relevant") {
+          finalSearchResults.push(result);
+          console.log("Relevant. Added to final results.");
+        } else {
+          console.log("Skipped irrelevant result.");
+        }
+      } catch (error) {
+        console.error("Error evaluating result:", error);
+      }
+    }
+  } catch (error) {
+    console.error("Error in searchAndProcess:", error);
+  }
 };
 
 const main = async () => {
