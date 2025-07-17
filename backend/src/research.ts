@@ -41,13 +41,22 @@ const searchWeb = async (query: string) => {
 };
 
 // evaluate and keep the relevant info
-const searchAndProcess = async (query: string) => {
+const searchAndProcess = async (
+  query: string,
+  existingSources: SearchResult[] = []
+) => {
   const finalSearchResults: SearchResult[] = [];
 
   try {
     const searchResults = await searchWeb(query);
     for (const result of searchResults) {
       try {
+        // skip repeating source
+        const existedURL = existingSources.some((e) => e.url === result.url);
+        if (existedURL) {
+          console.log("Skipping duplicate source:", result.url);
+          continue;
+        }
         const { object: evaluation } = await generateObject({
           model: mainModel,
           prompt: `You are a researcher. Evaluate whether this result is relevant and help to answer the query: ${query}. 
@@ -142,7 +151,11 @@ const deepResearch = async (
 
   for (const query of queries) {
     console.log(`Search the web for: ${query}`);
-    const searchResults = await searchAndProcess(query);
+    // update and skip existedURL
+    const searchResults = await searchAndProcess(
+      query,
+      accumulatedResearch.searchResults
+    );
     accumulatedResearch.searchResults.push(...searchResults);
 
     for (const searchResult of searchResults) {
