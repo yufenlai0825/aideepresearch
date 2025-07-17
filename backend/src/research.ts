@@ -99,19 +99,28 @@ const generateLearnings = async (query: string, searchResult: SearchResult) => {
   return object;
 };
 
+// deep-research
+// recursion + depth and breadth
+const deepResearch = async (
+  query: string,
+  depth: number = 1,
+  breadth: number = 3
+) => {
+  const queries = await generateSearchQueries(query);
+  for (const query of queries) {
+    console.log(`Search the web for: ${query}`);
+    const searchResults = await searchAndProcess(query);
+    for (const searchResult of searchResults) {
+      console.log(`Processing search result: ${searchResult.url}`);
+      const learnings = await generateLearnings(query, searchResult);
+    }
+  }
+};
+
 const main = async () => {
   try {
-    const prompt = "How to become an Olympic athlete?";
-    const queries = await generateSearchQueries(prompt);
-
-    for (const query of queries) {
-      console.log(`Search the web for: ${query}`);
-      const searchResults = await searchAndProcess(query);
-      for (const searchResult of searchResults) {
-        console.log(`Processing search result: ${searchResult.url}`);
-        const learnings = await generateLearnings(query, searchResult);
-      }
-    }
+    const prompt = "How to become an Olympic runner?";
+    const research = await deepResearch(prompt);
   } catch (error) {
     console.error("Error in main:", error);
   }
