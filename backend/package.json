@@ -1,0 +1,27 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Yu-Fen Lai",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@ai-sdk/groq": "^1.2.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.14",
+    "ai": "^4.3.19",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "exa-js": "^1.8.21",
+    "express": "^5.1.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "zod": "^3.25.76"
+  }
+}
