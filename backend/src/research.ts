@@ -77,6 +77,26 @@ const searchAndProcess = async (query: string) => {
   } catch (error) {
     console.error("Error in searchAndProcess:", error);
   }
+  return finalSearchResults;
+};
+
+// learning
+const generateLearnings = async (query: string, searchResult: SearchResult) => {
+  const { object } = await generateObject({
+    model: mainModel,
+    prompt: `The user is researching "${query}". Generate a learning and a follow-up question from this result:
+ 
+    Title: ${searchResult.title}
+    URL: ${searchResult.url}
+    Content: ${searchResult.content.substring(0, 500)}...
+    `,
+    // limit content
+    schema: z.object({
+      learning: z.string(),
+      followUpQuestions: z.array(z.string()),
+    }),
+  });
+  return object;
 };
 
 const main = async () => {
@@ -86,6 +106,11 @@ const main = async () => {
 
     for (const query of queries) {
       console.log(`Search the web for: ${query}`);
+      const searchResults = await searchAndProcess(query);
+      for (const searchResult of searchResults) {
+        console.log(`Processing search result: ${searchResult.url}`);
+        const learnings = await generateLearnings(query, searchResult);
+      }
     }
   } catch (error) {
     console.error("Error in main:", error);
