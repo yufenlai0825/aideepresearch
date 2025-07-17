@@ -176,6 +176,17 @@ const deepResearch = async (
   return accumulatedResearch;
 };
 
+// generate report with data
+const generateReport = async (research: Research) => {
+  const { text } = await generateText({
+    model: mainModel,
+    prompt:
+      "Generate a report based on the following research data: \n\n " +
+      JSON.stringify(research, null, 2),
+  });
+  return text;
+};
+
 const main = async () => {
   try {
     const prompt = "How to become an Olympic runner?";
