@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./research.css";
 
 interface ResearchFormProps {
   onSubmit: (query: string, depth: number, breadth: number) => void;
