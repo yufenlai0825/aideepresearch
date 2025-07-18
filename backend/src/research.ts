@@ -92,6 +92,11 @@ const searchAndProcess = async (
         console.error("Error evaluating result:", error);
       }
     }
+    // if no results found, fallback to one
+    if (finalSearchResults.length === 0 && searchResults.length > 0) {
+      console.log("No relevant results found, adding best available result...");
+      finalSearchResults.push(searchResults[0]);
+    }
   } catch (error) {
     console.error("Error in searchAndProcess:", error);
   }
