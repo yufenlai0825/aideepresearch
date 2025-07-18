@@ -27,7 +27,7 @@ const generateSearchQueries = async (query: string, n: number = 3) => {
 // searching online
 const searchWeb = async (query: string) => {
   const { results } = await exa.searchAndContents(query, {
-    numResults: 1,
+    numResults: 2,
     livecrawl: "never",
     // "never" as to save costs
   });
@@ -46,11 +46,19 @@ const searchAndProcess = async (
   query: string,
   existingSources: SearchResult[] = []
 ) => {
+  console.log("=== SEARCHANDPROCESS START ===");
+  console.log("Query:", query);
+  console.log("Existing sources count:", existingSources.length);
+
   const finalSearchResults: SearchResult[] = [];
 
   try {
     const searchResults = await searchWeb(query);
+    console.log("SearchWeb returned:", searchResults.length, "results");
+
     for (const result of searchResults) {
+      console.log("Processing result:", result.title);
+
       try {
         // skip repeating source
         const existedURL = existingSources.some((e) => e.url === result.url);
@@ -67,7 +75,7 @@ const searchAndProcess = async (
                 URL: ${result.url}
                 Content Preview: ${result.content.substring(0, 300)}...
                 
-                Only mark as relevant if it directly helps answer the question. Be strict.`,
+                Mark as relevant if it helps answer the question.`,
           // only evaluate the first 300 characters
           output: "enum", // only return one of the two
           enum: ["relevant", "irrelevant"],
@@ -87,6 +95,8 @@ const searchAndProcess = async (
   } catch (error) {
     console.error("Error in searchAndProcess:", error);
   }
+  console.log("=== SEARCHANDPROCESS END ===");
+
   return finalSearchResults;
 };
 
@@ -150,6 +160,7 @@ export const deepResearch = async (
 
   const queries = await generateSearchQueries(prompt, breadth);
   accumulatedResearch.queries = queries;
+  console.log(`\n Generated ${queries.length} search queries:`);
 
   for (const query of queries) {
     console.log(`Search the web for: ${query}`);
@@ -159,10 +170,14 @@ export const deepResearch = async (
       accumulatedResearch.searchResults
     );
     accumulatedResearch.searchResults.push(...searchResults);
+    console.log(
+      `Found ${searchResults.length} relevant sources for: "${query}"`
+    );
 
     for (const searchResult of searchResults) {
-      console.log(`Processing search result: ${searchResult.url}`);
       const learnings = await generateLearnings(query, searchResult);
+      console.log(`Generated learning from: ${searchResult.title}`);
+      console.log(`Key insight: ${learnings.learning.substring(0, 100)}...`);
       accumulatedResearch.learnings.push(learnings);
       accumulatedResearch.completedQueries.push(query);
 
@@ -175,6 +190,16 @@ export const deepResearch = async (
       await deepResearch(newQuery, depth - 1, Math.ceil(breadth / 2));
     }
   }
+  console.log("Deep Research completed successfully!");
+  console.log(
+    `Total sources found: ${accumulatedResearch.searchResults.length}`
+  );
+  console.log(
+    `Total learnings generated: ${accumulatedResearch.learnings.length}`
+  );
+  console.log(
+    `Total queries executed: ${accumulatedResearch.completedQueries.length}`
+  );
   return accumulatedResearch;
 };
 
@@ -206,26 +231,27 @@ export const generatePredictionTree = async (research: Research) => {
   };
 };
 
-const main = async () => {
-  try {
-    const prompt =
-      "Predict the ending of Stranger Things final season based on fan theories and cast hints.";
-    const research = await deepResearch(prompt);
-    console.log("Research completed! ");
-    console.log("Generating prediction tree...");
-    const predictionTree = await generatePredictionTree(research);
-    console.log("☄️ STRANGER THINGS FINALE PREDICTIONS:");
-    console.log(JSON.stringify(predictionTree, null, 2));
+// test version with Stranger Things
+// const main = async () => {
+//   try {
+//     const prompt =
+//       "Predict the ending of Stranger Things final season based on fan theories and cast hints.";
+//     const research = await deepResearch(prompt);
+//     console.log("Research completed! ");
+//     console.log("Generating prediction tree...");
+//     const predictionTree = await generatePredictionTree(research);
+//     console.log("☄️ STRANGER THINGS FINALE PREDICTIONS:");
+//     console.log(JSON.stringify(predictionTree, null, 2));
 
-    // save as JSON
-    fs.writeFileSync(
-      `predictions-${new Date().toISOString()}.json`,
-      JSON.stringify(predictionTree, null, 2)
-    );
-    console.log("Predictions saved to json file.");
-  } catch (error) {
-    console.error("Error in main:", error);
-  }
-};
+//     // save as JSON
+//     fs.writeFileSync(
+//       `predictions-${new Date().toISOString()}.json`,
+//       JSON.stringify(predictionTree, null, 2)
+//     );
+//     console.log("Predictions saved to json file.");
+//   } catch (error) {
+//     console.error("Error in main:", error);
+//   }
+// };
 
-main();
+// main();
