@@ -15,16 +15,26 @@ function App() {
     setResults(null);
 
     try {
-      // TODO: Add API call to backend here
-      console.log("Research request:", { query, depth, breadth });
+      console.log("Sending research request:", { query, depth, breadth });
 
-      // placeholder
-      setTimeout(() => {
-        setResults({ message: "Research functionality coming next!" });
-        setIsLoading(false);
-      }, 2000);
+      const response = await fetch("http://localhost:3001/api/research", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query, depth, breadth }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setResults(data);
     } catch (error) {
       console.error("Research failed:", error);
+      setResults({ error: "Research failed. Please try again." });
+    } finally {
       setIsLoading(false);
     }
   };
