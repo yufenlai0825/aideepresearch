@@ -22,7 +22,7 @@ const ResearchForm: React.FC<ResearchFormProps> = ({ onSubmit, isLoading }) => {
     <form onSubmit={handleSubmit} style={{ margin: "20px", maxWidth: "600px" }}>
       <div style={{ marginBottom: "15px" }}>
         <label>
-          Research Topic:
+          Topic to Explore:
           <textarea
             value={query}
             onChange={(e) => setQuery(e.target.value)}

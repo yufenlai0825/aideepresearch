@@ -20,7 +20,7 @@ const Dashboard: React.FC<DashboardProps> = ({ results, isLoading }) => {
   if (!results) {
     return (
       <div className="dashboard-placeholder">
-        <h3> 🤖 Enter a research topic above to begin! </h3>
+        <h3> 🤖 Enter a topic above to begin! </h3>
         <p>Our AI will analyze multiple sources and generate predictions</p>
       </div>
     );
@@ -29,7 +29,7 @@ const Dashboard: React.FC<DashboardProps> = ({ results, isLoading }) => {
   return (
     <div className="dashboard">
       <div className="confidence-section">
-        <h2>📊 Research Confidence</h2>
+        <h2>📊 Analysis Confidence</h2>
         <div className="confidence-meter">
           <div className="confidence-circle">
             <span className="confidence-text">{results.percentage}</span>
@@ -39,7 +39,7 @@ const Dashboard: React.FC<DashboardProps> = ({ results, isLoading }) => {
       </div>
 
       <div className="predictions-section">
-        <h2>🔮 Predictions</h2>
+        <h2>🔮 Analysis & Predictions</h2>
         <div className="predictions-grid">
           {results.predictions?.map((pred: any, index: number) => (
             <div
@@ -51,7 +51,7 @@ const Dashboard: React.FC<DashboardProps> = ({ results, isLoading }) => {
               </div>
               <p className="prediction-text">{pred.theory}</p>
               <div className="follow-up">
-                <strong>Follow-up questions:</strong>
+                <strong>💡 Follow-up Questions:</strong>
                 <ul>
                   {pred.followupQuestions?.map((q: string, i: number) => (
                     <li key={i}>{q}</li>
@@ -64,7 +64,7 @@ const Dashboard: React.FC<DashboardProps> = ({ results, isLoading }) => {
       </div>
 
       <div className="sources-section">
-        <h2>📚 Sources Analyzed</h2>
+        <h2>📚 Sources </h2>
         <div className="sources-grid">
           {results.sources?.map((source: any, index: number) => (
             <div key={index} className="source-card">

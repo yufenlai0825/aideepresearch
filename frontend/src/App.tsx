@@ -43,8 +43,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>AI Research Agent</h1>
-        <p>Deep Research & Prediction Tool</p>
+        <h1>AI Deep Research & Forecasting Engine</h1>
+        <p>Multi-Source Analysis + Prediction</p>
       </header>
 
       <main className="app-main">
