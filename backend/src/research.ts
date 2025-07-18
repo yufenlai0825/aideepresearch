@@ -203,11 +203,44 @@ export const deepResearch = async (
   return accumulatedResearch;
 };
 
-export const generatePredictionTree = async (research: Research) => {
-  const confidence = Math.min(
-    95,
-    50 + research.searchResults.length * 10 + research.learnings.length * 5
+// confidence calculation
+const calculateConfidence = (research: Research) => {
+  let confidence = 40; // base
+
+  // domain diversity bonus (most important)
+  const domains = new Set(
+    research.searchResults.map((r) => {
+      try {
+        return new URL(r.url).hostname;
+      } catch {
+        return r.url;
+      }
+    })
   );
+
+  const domainCount = domains.size;
+  if (domainCount >= 4) confidence += 25;
+  else if (domainCount >= 3) confidence += 15;
+  else if (domainCount >= 2) confidence += 10;
+  else confidence += 5;
+
+  // content quality
+  const avgLearningLength =
+    research.learnings.reduce((sum, l) => sum + l.learning.length, 0) /
+    research.learnings.length;
+
+  if (avgLearningLength > 150) confidence += 15; // detailed insights
+  else if (avgLearningLength > 100) confidence += 10; // good insights
+  else if (avgLearningLength < 50) confidence -= 10; // vague insights
+
+  // basic source count bonus
+  confidence += Math.min(15, research.searchResults.length * 3);
+
+  return Math.max(30, Math.min(85, confidence));
+};
+
+export const generatePredictionTree = async (research: Research) => {
+  const confidence = calculateConfidence(research);
 
   return {
     root: research.query,
