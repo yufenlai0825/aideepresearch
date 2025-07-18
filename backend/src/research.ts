@@ -123,14 +123,6 @@ type Research = {
   completedQueries: string[];
 };
 
-const accumulatedResearch: Research = {
-  query: undefined,
-  queries: [],
-  searchResults: [],
-  learnings: [],
-  completedQueries: [],
-};
-
 // deep-research
 // recursion + decrement depth and breadth
 export const deepResearch = async (
@@ -138,6 +130,15 @@ export const deepResearch = async (
   depth: number = 2,
   breadth: number = 2
 ) => {
+  // clean obj for each req
+  const accumulatedResearch: Research = {
+    query: undefined,
+    queries: [],
+    searchResults: [],
+    learnings: [],
+    completedQueries: [],
+  };
+
   // first search
   if (!accumulatedResearch.query) {
     accumulatedResearch.query = prompt;
