@@ -62,7 +62,7 @@ cd backend
 npm install
 
 # Frontend setup
-cd ../frontend
+cd frontend
 npm install
 ```
 
