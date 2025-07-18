@@ -6,71 +6,83 @@
 
 .research-section label {
   display: block;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
   font-weight: 600;
-  color: #444;
+  color: #374151;
+  font-size: 1.05rem;
 }
 
 /* textarea */
 .research-section textarea {
   width: 100% !important;
-  min-height: 100px !important;
-  padding: 1rem !important;
-  border: 2px solid #e1e5e9 !important;
-  border-radius: 8px !important;
+  min-height: 120px !important;
+  padding: 1.2rem !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 12px !important;
   font-size: 16px !important;
   font-family: "Inter", sans-serif !important;
   resize: vertical;
-  transition: border-color 0.3s ease;
-  margin: 5px 0 !important;
+  transition: all 0.3s ease;
+  margin: 8px 0 !important;
+  background: #fafafa;
 }
 
 .research-section textarea:focus {
   outline: none;
-  border-color: #667eea !important;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #1e3a8a !important;
+  box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
+  background: #ffffff;
 }
 
 /* form controls */
 .research-section div[style*="display: flex"] {
   display: flex !important;
-  gap: 2rem !important;
-  margin-bottom: 1.5rem !important;
+  gap: 2.5rem !important;
+  margin-bottom: 2rem !important;
   flex-wrap: wrap;
 }
 
-/* select */
+/* select styles */
 .research-section select {
-  padding: 0.5rem !important;
-  border: 2px solid #e1e5e9 !important;
-  border-radius: 6px !important;
+  padding: 0.8rem !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 8px !important;
   font-size: 16px !important;
-  margin-left: 0.5rem !important;
+  margin-left: 0.8rem !important;
   font-family: "Inter", sans-serif !important;
+  background: #fafafa;
+  transition: all 0.3s ease;
 }
 
-/* button */
+.research-section select:focus {
+  border-color: #1e3a8a !important;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+  background: #ffffff;
+}
+
+/* buttons */
 .research-section button {
-  background: linear-gradient(135deg, #667eea, #764ba2) !important;
+  background: linear-gradient(135deg, #1e3a8a, #374151) !important;
   color: white !important;
   border: none !important;
-  padding: 1rem 2rem !important;
-  border-radius: 8px !important;
+  padding: 1.2rem 2.5rem !important;
+  border-radius: 12px !important;
   font-size: 16px !important;
   font-weight: 600 !important;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 150px;
+  min-width: 180px;
   font-family: "Inter", sans-serif !important;
+  letter-spacing: 0.3px;
 }
 
 .research-section button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(30, 58, 138, 0.4);
 }
 
 .research-section button:disabled {
-  background: #ccc !important;
+  background: #9ca3af !important;
   cursor: not-allowed;
   transform: none;
 }
@@ -79,6 +91,6 @@
 @media (max-width: 768px) {
   .research-section div[style*="display: flex"] {
     flex-direction: column !important;
-    gap: 1rem !important;
+    gap: 1.5rem !important;
   }
 }
