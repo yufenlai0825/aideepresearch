@@ -1,6 +1,7 @@
-const express = require("express");
-const cors = require("cors");
-const env = require("dotenv");
+import express from "express";
+import cors from "cors";
+import { deepResearch, generatePredictionTree } from "./research";
+import env from "dotenv";
 env.config();
 
 const app = express();
@@ -11,6 +12,26 @@ app.use(express.json());
 
 app.get("/api/app", (req, res) => {
   res.json({ message: "AI Research Engine API is running!" });
+});
+
+// research form endpoint
+app.post("/api/research", async (req, res) => {
+  try {
+    const { query, depth = 2, breadth = 2 } = req.body;
+
+    console.log(
+      `Starting research: "${query}" (depth: ${depth}, breadth: ${breadth})`
+    );
+
+    // use existing functions
+    const research = await deepResearch(query, depth, breadth);
+    const predictionTree = generatePredictionTree(research);
+
+    res.json(predictionTree);
+  } catch (error) {
+    console.error("Research failed:", error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 app.listen(PORT, () => {

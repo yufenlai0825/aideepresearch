@@ -133,7 +133,7 @@ const accumulatedResearch: Research = {
 
 // deep-research
 // recursion + decrement depth and breadth
-const deepResearch = async (
+export const deepResearch = async (
   prompt: string,
   depth: number = 2,
   breadth: number = 2
@@ -177,7 +177,7 @@ const deepResearch = async (
   return accumulatedResearch;
 };
 
-const generatepredictionTree = async (research: Research) => {
+export const generatePredictionTree = async (research: Research) => {
   const confidence = Math.min(
     95,
     50 + research.searchResults.length * 10 + research.learnings.length * 5
@@ -212,7 +212,7 @@ const main = async () => {
     const research = await deepResearch(prompt);
     console.log("Research completed! ");
     console.log("Generating prediction tree...");
-    const predictionTree = await generatepredictionTree(research);
+    const predictionTree = await generatePredictionTree(research);
     console.log("☄️ STRANGER THINGS FINALE PREDICTIONS:");
     console.log(JSON.stringify(predictionTree, null, 2));
 
