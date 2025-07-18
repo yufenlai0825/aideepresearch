@@ -221,7 +221,7 @@ const main = async () => {
       `predictions-${new Date().toISOString()}.json`,
       JSON.stringify(predictionTree, null, 2)
     );
-    console.log("Predictions saved to stranger-things-predictions.json");
+    console.log("Predictions saved to json file.");
   } catch (error) {
     console.error("Error in main:", error);
   }
