@@ -230,10 +230,10 @@ const calculateConfidence = (research: Research) => {
     research.learnings.length;
 
   if (avgLearningLength > 150) confidence += 15; // detailed insights
-  else if (avgLearningLength > 100) confidence += 10; // good insights
-  else if (avgLearningLength < 50) confidence -= 10; // vague insights
+  else if (avgLearningLength > 100) confidence += 10; // good
+  else if (avgLearningLength < 50) confidence -= 10; // vague
 
-  // basic source count bonus
+  // max + 15 for more sources
   confidence += Math.min(15, research.searchResults.length * 3);
 
   return Math.max(30, Math.min(85, confidence));
