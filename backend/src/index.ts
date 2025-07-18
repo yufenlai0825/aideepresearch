@@ -23,9 +23,8 @@ app.post("/api/research", async (req, res) => {
       `Starting research: "${query}" (depth: ${depth}, breadth: ${breadth})`
     );
 
-    // use existing functions
     const research = await deepResearch(query, depth, breadth);
-    const predictionTree = generatePredictionTree(research);
+    const predictionTree = await generatePredictionTree(research);
 
     res.json(predictionTree);
   } catch (error) {
