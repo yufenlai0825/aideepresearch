@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
 import ResearchForm from "./research";
+import Dashboard from "./Dashboard";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -46,21 +47,16 @@ function App() {
         <p>Deep Research & Prediction Tool</p>
       </header>
 
-      <main>
-        <ResearchForm onSubmit={handleResearch} isLoading={isLoading} />
+      <main className="app-main">
+        <div className="container">
+          <section className="research-section">
+            <ResearchForm onSubmit={handleResearch} isLoading={isLoading} />
+          </section>
 
-        {results && (
-          <div
-            style={{
-              margin: "20px",
-              padding: "20px",
-              border: "1px solid #ccc",
-            }}
-          >
-            <h3>Results:</h3>
-            <pre>{JSON.stringify(results, null, 2)}</pre>
-          </div>
-        )}
+          <section className="dashboard-section">
+            <Dashboard results={results} isLoading={isLoading} />
+          </section>
+        </div>
       </main>
     </div>
   );
